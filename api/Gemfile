@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
 end
-
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.7'
@@ -27,7 +26,7 @@ gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
 end
 
 group :development do
@@ -38,7 +37,7 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 group :development, :test do
   # Use awesome print for debugging readability
@@ -46,7 +45,28 @@ group :development, :test do
 
   # Use rubocop for static code analyzation
   gem 'rubocop-rails'
+
+  # Use Factory Bot for model generation
+  gem 'factory_bot_rails'
+
+  # Use Faker for model attribute generation
+  gem 'faker'
+
+  # Use Guard for running tests
+  gem 'guard-rspec'
+
+  # Use RSpec for testing
+  gem 'rspec-rails'
+
+  # Use Shoulda-Matchers for clear tests
+  gem 'shoulda-matchers'
 end
 
-# Use figaro for environment variables
-gem 'figaro'
+# Use dotenv for environment variables
+gem 'dotenv-rails'
+
+# Use Netflix's serializers
+gem 'fast_jsonapi'
+
+# Use paper_trail for lossless data changes
+gem 'paper_trail'
