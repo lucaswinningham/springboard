@@ -45,7 +45,25 @@ group :development, :test do
 
   # Use rubocop for static code analyzation
   gem 'rubocop-rails'
+
+  # Use Factory Bot for model generation
+  gem 'factory_bot_rails'
+
+  # Use Faker for model attribute generation
+  gem 'faker'
+
+  # Use Guard for running tests
+  gem 'guard-rspec'
+
+  # Use RSpec for testing
+  gem 'rspec-rails'
+
+  # Use Shoulda-Matchers for clear tests
+  gem 'shoulda-matchers'
 end
 
 # Use dotenv for environment variables
 gem 'dotenv'
+
+# Use Netflix's serializers
+gem 'fast_jsonapi'
