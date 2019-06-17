@@ -2,7 +2,7 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV.fetch("DB_ROLE_NAME") %>
+  username: <%= ENV['DB_ROLE_NAME'] %>
   timeout: 5000
 
 development:
