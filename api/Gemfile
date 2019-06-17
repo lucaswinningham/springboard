@@ -63,7 +63,7 @@ group :development, :test do
 end
 
 # Use dotenv for environment variables
-gem 'dotenv'
+gem 'dotenv-rails'
 
 # Use Netflix's serializers
 gem 'fast_jsonapi'
