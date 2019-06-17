@@ -67,3 +67,5 @@ gem 'dotenv-rails'
 
 # Use Netflix's serializers
 gem 'fast_jsonapi'
+
+gem 'paper_trail'
