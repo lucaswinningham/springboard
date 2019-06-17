@@ -1,5 +1,6 @@
 AllCops:
   Exclude:
+    - 'Guardfile'
     - 'bin/*'
     - 'config/initializers/backtrace_silencers.rb'
     - 'db/schema.rb'
