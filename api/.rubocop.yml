@@ -1,0 +1,13 @@
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'config/initializers/backtrace_silencers.rb'
+    - 'db/schema.rb'
+Metrics/LineLength:
+  Max: 100
+Metrics/MethodLength:
+  Max: 15
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
