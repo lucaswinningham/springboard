@@ -1,0 +1,22 @@
+button, .btn {
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:hover, &:focus, &:active, &:active:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+.btn {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  font-weight: bold;
+  padding: 1rem 2rem;
+}
+
+.btn-round {
+  border-radius: 2em;
+}
