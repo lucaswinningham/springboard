@@ -4,6 +4,8 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :name
       t.string :email
       t.boolean :active
+      t.datetime :activated_at
+      t.datetime :deactivated_at
 
       t.timestamps
     end
