@@ -4,6 +4,7 @@ AllCops:
     - 'bin/*'
     - 'config/initializers/backtrace_silencers.rb'
     - 'db/schema.rb'
+    - 'db/migrate/*'
 Metrics/LineLength:
   Max: 100
 Metrics/MethodLength:
