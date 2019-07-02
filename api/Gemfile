@@ -14,9 +14,6 @@ gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -62,7 +59,16 @@ group :development, :test do
 
   # Use Shoulda-Matchers for clear tests
   gem 'shoulda-matchers'
+
+  # Use timecop for time manipulation
+  gem 'timecop'
 end
+
+# Use BCrypt for hashing
+gem 'bcrypt'
+
+# Use RabbitMQ and Bunny for background processing
+gem 'bunny'
 
 # Use dotenv for environment variables
 gem 'dotenv-rails'
@@ -72,6 +78,9 @@ gem 'fast_jsonapi'
 
 # Use GraphQL for api data
 gem 'graphql'
+
+# Use JWT for auth
+gem 'jwt'
 
 # Use paper_trail for lossless data changes
 gem 'paper_trail'

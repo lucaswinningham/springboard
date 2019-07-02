@@ -1,26 +1,37 @@
 class GraphqlController < ApplicationController
   def execute
-    variables = ensure_hash(params[:variables])
-    query = params[:query]
-    operation_name = params[:operationName]
-    context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
-    }
     result = ApiSchema.execute(
       query,
       variables: variables,
       context: context,
       operation_name: operation_name
     )
-    render json: result
-  rescue StandardError => e
-    raise e unless Rails.env.development?
 
-    handle_error_in_development e
+    render json: result, status: :ok
+  rescue StandardError => e
+    internal_server_error e
   end
 
   private
+
+  def query
+    params[:query]
+  end
+
+  def variables
+    ensure_hash(params[:variables])
+  end
+
+  def context
+    {
+      # Query context goes here, for example:
+      # current_user: current_user,
+    }
+  end
+
+  def operation_name
+    params[:operationName]
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
@@ -40,11 +51,13 @@ class GraphqlController < ApplicationController
     end
   end
 
-  def handle_error_in_development(error)
-    logger.error error.message
-    logger.error error.backtrace.join("\n")
+  def internal_server_error(error)
+    raise e unless Rails.env.development?
 
-    error_json = { error: { message: error.message, backtrace: error.backtrace }, data: {} }
-    render_internal_server_error error_json
+    logger.error error.message
+    logger.error error.backtrace.join "\n"
+
+    error_json = { error: { message: error.message, backtrace: error.backtrace }, data: nil }
+    render json: error_json, status: :internal_server_error
   end
 end

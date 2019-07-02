@@ -38,10 +38,14 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    amq-protocol (2.3.0)
     arel (8.0.0)
     ast (2.4.0)
     awesome_print (1.8.0)
+    bcrypt (3.1.12)
     builder (3.2.3)
+    bunny (2.14.2)
+      amq-protocol (~> 2.3, >= 2.3.0)
     byebug (11.0.1)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
@@ -86,6 +90,7 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.2)
+    jwt (2.1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -201,6 +206,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.20.3)
     thread_safe (0.3.6)
+    timecop (0.9.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
@@ -213,6 +219,8 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
+  bcrypt
+  bunny
   byebug
   dotenv-rails
   factory_bot_rails
@@ -221,6 +229,7 @@ DEPENDENCIES
   graphiql-rails
   graphql
   guard-rspec
+  jwt
   listen (>= 3.0.5, < 3.2)
   paper_trail
   pg (>= 0.18, < 2.0)
@@ -232,6 +241,7 @@ DEPENDENCIES
   shoulda-matchers
   spring
   spring-watcher-listen (~> 2.0.0)
+  timecop
   tzinfo-data
 
 BUNDLED WITH
