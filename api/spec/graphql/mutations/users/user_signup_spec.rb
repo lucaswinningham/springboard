@@ -3,8 +3,9 @@ module Mutations
     RSpec.describe UserSignup, type: :request do
       describe '.resolve' do
         context 'with valid params' do
+          let(:new_user) { build :user }
+
           let(:valid_request) do
-            new_user = build :user
             params = { query: query(name: new_user.name, email: new_user.email) }
             post '/graphql', params: params
           end
@@ -19,17 +20,20 @@ module Mutations
             expect(data).to be_present
             expect(data.userSignup).to be_present
 
-            expect(data.userSignup.salt).to be_present
-            expect(data.userSignup.nonce).to be_present
-            expect(data.userSignup.ckey).to be_present
-            expect(data.userSignup.civ).to be_present
+            new_user = User.last # is this kosher?
+
+            expect(data.userSignup.salt).to eq new_user.salt
+            expect(data.userSignup.nonce).to eq new_user.nonce
+            expect(data.userSignup.ckey).to eq new_user.ckey
+            expect(data.userSignup.civ).to eq new_user.civ
           end
         end
 
         context 'with invalid name' do
+          let(:new_user) { build :user, name: '', email: '' }
+
           let(:invalid_request) do
-            invalid_new_user = build :user, name: ''
-            params = { query: query(name: invalid_new_user.name, email: invalid_new_user.email) }
+            params = { query: query(name: new_user.name, email: new_user.email) }
             post '/graphql', params: params
           end
 
