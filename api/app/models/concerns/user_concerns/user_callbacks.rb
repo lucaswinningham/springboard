@@ -8,6 +8,8 @@ module UserConcerns
 
     private
 
-    def send_activation_email; end
+    def send_activation_email
+      Mailers::User::ActivationMail.new(new_user).deliver
+    end
   end
 end
