@@ -1,6 +1,24 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
 
-# Specify your gem's dependencies in mailer.gemspec
-gemspec
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+end
+
+# Use awesome print for debugging readability
+gem 'awesome_print'
+
+# Use dotenv for environment variables
+gem 'dotenv'
+
+# Use RabbitMQ, Bunny, and Sneakers for background processing
+gem 'bunny'
+gem 'sneakers'
+
+# Use mail for sending email
+gem 'mail'
