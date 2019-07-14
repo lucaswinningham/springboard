@@ -8,6 +8,9 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+
+  # Use rubocop for static code analyzation
+  gem 'rubocop'
 end
 
 # Use awesome print for debugging readability

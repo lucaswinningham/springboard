@@ -39,9 +39,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
 
-  # Use rubocop for static code analyzation
-  gem 'rubocop-rails'
-
   # Use Factory Bot for model generation
   gem 'factory_bot_rails'
 
@@ -53,6 +50,9 @@ group :development, :test do
 
   # Use RSpec for testing
   gem 'rspec-rails'
+
+  # Use rubocop for static code analyzation
+  gem 'rubocop-rails'
 
   # Use Shoulda-Matchers for clear tests
   gem 'shoulda-matchers'
