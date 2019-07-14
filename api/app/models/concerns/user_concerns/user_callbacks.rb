@@ -9,7 +9,7 @@ module UserConcerns
     private
 
     def send_activation_email
-      Mailers::User::ActivationMail.new(new_user).deliver
+      Mailers::UserMailers::ActivationMailer.new(self).deliver
     end
   end
 end
