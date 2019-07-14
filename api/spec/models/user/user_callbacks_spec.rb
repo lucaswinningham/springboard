@@ -10,4 +10,14 @@ RSpec.describe User, type: :model do
       new_user.save
     end
   end
+
+  describe '#save' do
+    it 'subsequent saves should not send activation mail' do
+      existing_user = create :user
+
+      allow(Mailers::UserMailers::ActivationMailer).not_to receive(:new)
+
+      existing_user.save
+    end
+  end
 end

@@ -24,7 +24,7 @@ module Mailers
       end
 
       def activation_link
-        "#{ENV['CLIENT_URL']}/activations/#{user.name}/#{user.activation.token}"
+        "#{ENV['CLIENT_URL']}/activations/#{user.name}/#{user.activation_token}"
       end
     end
   end
