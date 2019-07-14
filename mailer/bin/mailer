@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require_relative '../config/setup'
+require 'dotenv/load'
+
+require 'mail'
+
+mail_default_options = {
+  address: "smtp.gmail.com",
+  port: 587,
+  user_name: ENV['GMAIL_USERNAME'],
+  password: ENV['GMAIL_PASSWORD'],
+  authentication: 'plain',
+  enable_starttls_auto: true
+}
+
+Mail.defaults { delivery_method :smtp, mail_default_options }
+
+require 'sneakers/runner'
+require 'logger'
+require 'mailer/workers/user/activation_worker'
+
+workers = [
+  Workers::User::ActivationWorker
+]
+
+Sneakers.configure(amqp: ENV['AMQP_URL'], daemonize: false, log: STDOUT)
+Sneakers.logger.level = Logger::INFO
+Sneakers::Runner.new(workers).run
+
+require 'awesome_print'
