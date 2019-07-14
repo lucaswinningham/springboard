@@ -18,7 +18,7 @@ Mail.defaults { delivery_method :smtp, mail_default_options }
 
 require 'sneakers/runner'
 require 'logger'
-require 'mailer/workers/user/activation_worker'
+require 'mailer/workers/user_workers/activation_worker'
 
 workers = [
   Workers::User::ActivationWorker
