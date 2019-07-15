@@ -10,6 +10,7 @@ describe Mailers::UserMailers::ActivationMailer do
       }
 
       expect(Job).to receive(:enqueue).with(queue: queue_name, payload: payload)
+
       Mailers::UserMailers::ActivationMailer.new(new_user).deliver
     end
   end

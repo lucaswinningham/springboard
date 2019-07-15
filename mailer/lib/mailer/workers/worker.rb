@@ -10,6 +10,8 @@ module Worker
     end
   end
 
+  attr_reader :payload
+
   def work(message)
     @payload = JSON.parse message, object_class: OpenStruct
     log
@@ -20,8 +22,6 @@ module Worker
   end
 
   private
-
-  attr_reader :payload
 
   def go
     raise NotImplementedError
