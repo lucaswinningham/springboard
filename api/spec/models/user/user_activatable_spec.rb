@@ -19,7 +19,6 @@ RSpec.describe User, type: :model do
 
   describe '#deactivate' do
     it 'should deactivate associations' do
-
     end
   end
 end
