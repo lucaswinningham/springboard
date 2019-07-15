@@ -11,6 +11,7 @@ module Job
 
     puts " [APP_INFO] #{queue_name}:"
     ap JSON.parse(payload)
+
     queue.publish payload
     connection.close
   end
