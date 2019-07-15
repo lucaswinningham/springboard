@@ -1,9 +1,5 @@
 describe Job do
-  class Klass
-    include Job
-  end
-
-  describe '#enqueue' do
+  describe '::enqueue' do
     context 'when not in test environment' do
       let!(:override_environment) do
         env = double 'rails env'
@@ -26,14 +22,14 @@ describe Job do
         expect(queue).to receive(:publish).with(payload.to_json)
         expect(connection).to receive(:close)
 
-        Klass.new.send :enqueue, queue: queue_name, payload: payload
+        Job.enqueue queue: queue_name, payload: payload
       end
     end
 
     context 'when in test environment' do
       it 'should not enqueue' do
         expect(Bunny).not_to receive(:new)
-        Klass.new.send :enqueue
+        Job.enqueue
       end
     end
   end

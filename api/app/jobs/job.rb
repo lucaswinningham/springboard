@@ -1,5 +1,5 @@
-module Job
-  def enqueue(**kwargs)
+class Job
+  def self.enqueue(**kwargs)
     return if Rails.env.test?
 
     queue_name = kwargs[:queue]
