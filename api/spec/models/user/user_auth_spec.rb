@@ -1,15 +1,15 @@
 RSpec.describe User, type: :model do
   describe '#create' do
-    it 'should populate salt on create' do
-      new_salt = 'new_salt'
-      expect(BCrypt::Engine).to receive(:generate_salt) { new_salt }
+    it 'should populate salt' do
+      new_salt = BCrypt::Engine.generate_salt
+      expect(BCrypt::Engine).to receive(:generate_salt).at_least(:once) { new_salt }
       user = create :user, salt: nil
       expect(user.salt).to eq new_salt
     end
   end
 
   describe '#save' do
-    it 'subsequent saves should not change salt' do
+    it 'should not change salt' do
       user = create :user
       expect { user.update salt: 'bogus' }.to_not change { user.reload.salt }.itself
     end

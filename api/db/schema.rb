@@ -23,9 +23,10 @@ ActiveRecord::Schema.define(version: 20190627005717) do
     t.datetime "deactivated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "activation_digest"
+    t.string "password_digest"
     t.string "nonce"
     t.string "salt"
-    t.string "password_digest"
     t.string "civ"
     t.string "ckey"
     t.datetime "auth_expires_at"
@@ -38,8 +39,8 @@ ActiveRecord::Schema.define(version: 20190627005717) do
     t.bigint "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
-    t.json "object"
-    t.json "object_changes"
+    t.jsonb "object"
+    t.jsonb "object_changes"
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
