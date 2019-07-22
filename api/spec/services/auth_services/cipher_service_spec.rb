@@ -12,7 +12,7 @@ describe AuthServices::CipherService do
     it 'should decode and decrypt a message' do
       key = "O3GhpukThHID3LlFv8Y3Cw==\n"
       iv = "/i0uDJ8Y2NFmCcDriCSwmA==\n"
-      encrypted =  "x6f/tFde5SY8vfsgRL1wew==\n"
+      encrypted = "x6f/tFde5SY8vfsgRL1wew==\n"
       decrypted = AuthServices::CipherService.decrypt message: encrypted, key: key, iv: iv
       expect(decrypted).to eq 'test'
     end
