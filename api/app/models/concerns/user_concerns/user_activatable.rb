@@ -5,19 +5,18 @@ module UserConcerns
     included do
       include Activatable
 
-      before_create :assign_activation_digest
-
+      before_create :refresh_activation
       before_deactivate :deactivate_associations
     end
 
     attr_reader :activation_token
 
-    private
-
-    def assign_activation_digest
+    def refresh_activation
       @activation_token = SecureRandom.hex
       self.activation_digest = BCrypt::Password.create activation_token
     end
+
+    private
 
     def deactivate_associations; end
   end

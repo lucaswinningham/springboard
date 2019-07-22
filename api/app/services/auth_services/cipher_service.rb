@@ -26,8 +26,12 @@ module AuthServices
       Base64.encode64 new_cipher.tap(&:encrypt).random_iv
     end
 
-    def self.new_cipher
-      OpenSSL::Cipher::AES128.new(:CBC)
+    class << self
+      private
+
+      def new_cipher
+        OpenSSL::Cipher::AES128.new(:CBC)
+      end
     end
   end
 end

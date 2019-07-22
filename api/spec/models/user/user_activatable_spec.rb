@@ -1,5 +1,13 @@
 RSpec.describe User, type: :model do
   describe '#create' do
+    it 'should #refresh_activation' do
+      new_user = build :user
+      expect(new_user).to receive(:refresh_activation)
+      new_user.save
+    end
+  end
+
+  describe '#refresh_activation' do
     it 'should set #activation_token' do
       new_token = 'new_activation_token'
       expect(SecureRandom).to receive(:hex) { new_token }
