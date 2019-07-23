@@ -1,10 +1,9 @@
 RSpec.describe User, type: :model do
   describe '#create' do
     it 'should populate salt' do
-      new_salt = BCrypt::Engine.generate_salt
-      expect(BCrypt::Engine).to receive(:generate_salt).at_least(:once) { new_salt }
       user = create :user, salt: nil
-      expect(user.salt).to eq new_salt
+      valid_salt = BCrypt::Engine.valid_salt? user.salt
+      expect(valid_salt).to be true
     end
   end
 
@@ -16,29 +15,30 @@ RSpec.describe User, type: :model do
   end
 
   describe '#refresh_auth' do
+    let(:user) { create :user, nonce: nil, ckey: nil, civ: nil, auth_expires_at: nil }
+
     it 'should populate nonce' do
-      nonce_re = Regexp.new ''
-      user = create :user
+      nonce_re = Regexp.new '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
       expect { user.refresh_auth }.to change { user.nonce }.to(nonce_re)
     end
 
     it 'should populate ckey' do
-      ckey_re = Regexp.new '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
-      user = create :user
-      expect { user.refresh_auth }.to change { user.ckey }.to(ckey_re)
+      ckey = 'ckey'
+      expect(AuthServices::CipherService).to receive(:random_key) { ckey }
+      expect { user.refresh_auth }.to change { user.ckey }.to(ckey)
     end
 
     it 'should populate civ' do
-      civ_re = Regexp.new '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
-      user = create :user
-      expect { user.refresh_auth }.to change { user.civ }.to(civ_re)
+      civ = 'civ'
+      expect(AuthServices::CipherService).to receive(:random_iv) { civ }
+      expect { user.refresh_auth }.to change { user.civ }.to(civ)
     end
 
     it 'should populate auth_expires_at' do
-      user = create :user
-      Timecop.freeze
-      auth_exipiration = User::AUTH_EXPIRATION_DURATION.from_now
-      expect { user.refresh_auth }.to change { user.auth_expires_at }.to(auth_exipiration)
+      Timecop.freeze do
+        auth_exipiration = User::AUTH_EXPIRATION_DURATION.from_now
+        expect { user.refresh_auth }.to change { user.auth_expires_at }.to(auth_exipiration)
+      end
     end
   end
 end

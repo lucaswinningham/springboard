@@ -6,7 +6,7 @@ module UserConcerns
 
     included do
       before_create :assign_salt
-      validate :salt_not_changed
+      validate :validate_salt_not_changed
     end
 
     def refresh_auth
@@ -24,8 +24,8 @@ module UserConcerns
       self.salt = BCrypt::Engine.generate_salt
     end
 
-    def salt_not_changed
-      return unless salt_changed? && persisted?
+    def validate_salt_not_changed
+      return unless will_save_change_to_salt? && persisted?
 
       errors.add :salt, 'Change of salt not allowed!'
     end
