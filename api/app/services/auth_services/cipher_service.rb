@@ -1,5 +1,12 @@
 module AuthServices
   class CipherService
+    VALID_CIPHER_REGEXP = Regexp.new(
+      # '\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\n|[A-Za-z0-9+/]{3}=)?\z'
+      '\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\n)?\z'
+    ).freeze
+    VALID_KEY_REGEXP = VALID_CIPHER_REGEXP
+    VALID_IV_REGEXP = VALID_CIPHER_REGEXP
+
     def self.encrypt(message:, key:, iv:) # rubocop:disable Naming/UncommunicativeMethodParamName
       cipher = new_cipher.tap(&:encrypt)
       cipher.key = Base64.decode64 key

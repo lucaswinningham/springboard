@@ -33,14 +33,14 @@ describe AuthServices::CipherService do
 
   describe '::random_key' do
     it 'should give a random cipher key' do
-      regexp = Regexp.new '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      regexp = AuthServices::CipherService::VALID_KEY_REGEXP
       expect(AuthServices::CipherService.random_key).to match regexp
     end
   end
 
   describe '::random_key' do
     it 'should give a random cipher iv' do
-      regexp = Regexp.new '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      regexp = AuthServices::CipherService::VALID_IV_REGEXP
       expect(AuthServices::CipherService.random_iv).to match regexp
     end
   end
