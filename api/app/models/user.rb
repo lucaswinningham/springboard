@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include UserConcerns::UserValidations
+  include UserConcerns::UserIdentifiable
   include UserConcerns::UserActivatable
   include UserConcerns::UserAuth
 end

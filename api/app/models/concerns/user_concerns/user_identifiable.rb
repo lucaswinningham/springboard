@@ -1,5 +1,5 @@
 module UserConcerns
-  module UserValidations
+  module UserIdentifiable
     extend ActiveSupport::Concern
 
     VALID_NAME_REGEXP = /\A[A-Za-z0-9_\-]+\Z/.freeze
