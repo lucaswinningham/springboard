@@ -1,10 +1,8 @@
 describe Job do
   describe '::enqueue' do
     context 'when not in test environment' do
-      let!(:override_environment) do
-        env = double 'rails env'
-        expect(Rails).to receive(:env) { env }
-        expect(env).to receive(:test?) { false }
+      before do
+        expect(Rails.env).to receive(:test?) { false }
       end
 
       it 'should enqueue' do
