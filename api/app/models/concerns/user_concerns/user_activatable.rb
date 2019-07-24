@@ -7,6 +7,7 @@ module UserConcerns
 
       after_create :trigger_activation
       before_deactivate :deactivate_associations
+      after_activate :activate_associations
     end
 
     attr_reader :activation_token
@@ -29,5 +30,7 @@ module UserConcerns
     end
 
     def deactivate_associations; end
+
+    def activate_associations; end
   end
 end

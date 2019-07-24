@@ -36,21 +36,27 @@ RSpec.describe User, type: :model do
     let(:user) { create :user, nonce: nil, ckey: nil, civ: nil, auth_expires_at: nil }
 
     it 'should populate nonce' do
-      expect { user.refresh_auth }.to change { user.nonce }.to be_truthy
+      new_nonce = SecureRandom.base64
+      expect(SecureRandom).to receive(:base64) { new_nonce }
+      expect { user.refresh_auth }.to change { user.reload.nonce }.to new_nonce
     end
 
     it 'should populate ckey' do
-      expect { user.refresh_auth }.to change { user.ckey }.to be_truthy
+      new_ckey = AuthServices::CipherService.random_key
+      expect(AuthServices::CipherService).to receive(:random_key) { new_ckey }
+      expect { user.refresh_auth }.to change { user.reload.ckey }.to new_ckey
     end
 
     it 'should populate civ' do
-      expect { user.refresh_auth }.to change { user.civ }.to be_truthy
+      new_iv = AuthServices::CipherService.random_iv
+      expect(AuthServices::CipherService).to receive(:random_iv) { new_iv }
+      expect { user.refresh_auth }.to change { user.reload.civ }.to new_iv
     end
 
     it 'should populate auth_expires_at' do
       Timecop.freeze do
         auth_exipiration = User::AUTH_EXPIRATION_DURATION.from_now
-        expect { user.refresh_auth }.to change { user.auth_expires_at }.to auth_exipiration
+        expect { user.refresh_auth }.to change { user.reload.auth_expires_at }.to auth_exipiration
       end
     end
   end

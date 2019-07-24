@@ -3,8 +3,8 @@ describe AuthServices::CipherService do
     it 'should encrypt and encode a message' do
       key = "ZQ6UaBUEN8CePN4V0162fQ==\n"
       iv = "uu5Q2rZtbIwuAX+h4SYEXA==\n"
-      encrypted = AuthServices::CipherService.encrypt message: 'test', key: key, iv: iv
-      expect(encrypted).to eq "Q/Sa2X8gDWqJMW1mCd9t1Q==\n"
+      encrypted = AuthServices::CipherService.encrypt message: 'test message', key: key, iv: iv
+      expect(encrypted).to eq "f0MnHuT4Xc33drJ4alMVcg==\n"
     end
   end
 
@@ -12,9 +12,9 @@ describe AuthServices::CipherService do
     it 'should decode and decrypt a message' do
       key = "O3GhpukThHID3LlFv8Y3Cw==\n"
       iv = "/i0uDJ8Y2NFmCcDriCSwmA==\n"
-      encrypted = "x6f/tFde5SY8vfsgRL1wew==\n"
+      encrypted = "UArfsxdVvB+etXp/JrVSuw==\n"
       decrypted = AuthServices::CipherService.decrypt message: encrypted, key: key, iv: iv
-      expect(decrypted).to eq 'test'
+      expect(decrypted).to eq 'test message'
     end
   end
 

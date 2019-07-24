@@ -3,14 +3,17 @@ module UserConcerns
     extend ActiveSupport::Concern
 
     AUTH_EXPIRATION_DURATION = 5.minutes
+
     VALID_NONCE_REGEXP = Regexp.new(
       '\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\z'
     ).freeze
+    VALID_CKEY_REGEXP = AuthServices::CipherService::VALID_KEY_REGEXP
+    VALID_CIV_REGEXP = AuthServices::CipherService::VALID_IV_REGEXP
 
     included do
       validates :nonce, format: { with: VALID_NONCE_REGEXP }
-      validates :ckey, format: { with: AuthServices::CipherService::VALID_KEY_REGEXP }
-      validates :civ, format: { with: AuthServices::CipherService::VALID_IV_REGEXP }
+      validates :ckey, format: { with: VALID_CKEY_REGEXP }
+      validates :civ, format: { with: VALID_CIV_REGEXP }
     end
 
     def refresh_auth
