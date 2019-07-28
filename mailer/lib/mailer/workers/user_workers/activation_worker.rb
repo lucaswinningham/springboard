@@ -2,12 +2,14 @@ require 'mailer/workers/worker'
 require 'mail'
 
 module Workers
-  module User
+  module UserWorkers
     class ActivationWorker
       include Worker
       from_queue 'mailers.user.activation'
 
       def go
+        return unless Mailer::Env.production?
+
         send_email
       end
 
@@ -15,23 +17,11 @@ module Workers
 
       def send_email
         mail = Mail.new
-        mail.to = recipient
-        mail.from = app_email
+        mail.to = payload.email
+        mail.from = Mailer::Env.app_email
         mail.subject = 'Account activation'
         mail.html_part = html_part
         mail.deliver
-      end
-
-      def recipient
-        if ENV['ENVIRONMENT'] == 'production'
-          payload.email
-        else
-          app_email
-        end
-      end
-
-      def app_email
-        "#{ENV['GMAIL_USERNAME']}@gmail.com"
       end
 
       def html_part

@@ -18,10 +18,10 @@ Mail.defaults { delivery_method :smtp, mail_default_options }
 
 require 'sneakers/runner'
 require 'logger'
-require 'mailer/workers/user_workers/activation_worker'
 
+require 'mailer/workers/user_workers/activation_worker'
 workers = [
-  Workers::User::ActivationWorker
+  Workers::UserWorkers::ActivationWorker
 ]
 
 Sneakers.configure(amqp: ENV['AMQP_URL'], daemonize: false, log: STDOUT)

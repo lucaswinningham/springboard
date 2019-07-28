@@ -9,6 +9,12 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
+  # Use Guard for running tests
+  gem 'guard-rspec'
+
+  # Use RSpec for testing
+  gem 'rspec'
+
   # Use rubocop for static code analyzation
   gem 'rubocop'
 end

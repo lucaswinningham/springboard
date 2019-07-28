@@ -1,3 +1,4 @@
+require 'mailer/env'
 require "mailer/version"
 
 module Mailer
