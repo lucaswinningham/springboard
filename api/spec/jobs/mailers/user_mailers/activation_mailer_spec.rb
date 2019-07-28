@@ -4,10 +4,9 @@ describe Mailers::UserMailers::ActivationMailer do
       new_user = build :user
 
       queue_name = 'mailers.user.activation'
-      payload = {
-        email: new_user.email,
-        activation_link: nil
-      }
+
+      link = "#{ENV['CLIENT_URL']}/activate/#{new_user.name}/#{new_user.activation_token}"
+      payload = { email: new_user.email, activation_link: link }
 
       expect(Job).to receive(:enqueue).with(queue: queue_name, payload: payload)
 
