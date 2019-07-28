@@ -16,7 +16,7 @@ module UserConcerns
     def validate_salt_not_changed
       return unless will_save_change_to_salt? && persisted?
 
-      errors.add :salt, 'Change of salt not allowed!'
+      errors.add :salt, 'Change of salt not allowed.'
     end
   end
 end
