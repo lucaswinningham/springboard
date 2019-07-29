@@ -1,7 +1,7 @@
 require 'mailer/workers/user_workers/activation_worker'
 
 RSpec.describe Workers::UserWorkers::ActivationWorker do
-  let(:email) { 'lucas.winningham@gmail.com' }
+  let(:email) { 'user@example.com' }
   let(:activation_link) { 'domain.com' }
   let(:message) { { email: email, activation_link: activation_link }.to_json }
 

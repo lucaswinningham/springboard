@@ -3,11 +3,7 @@ require 'mailer/workers/worker'
 class WorkerDouble
   include Worker
 
-  attr_reader :my_attr
-
-  def go
-    @my_attr = payload.my_attr
-  end
+  def go; end
 end
 
 class NoGoWorkerDouble
@@ -15,8 +11,7 @@ class NoGoWorkerDouble
 end
 
 RSpec.describe Worker do
-  let(:my_attr) { 'my_attr' }
-  let(:payload) { { my_attr: my_attr } }
+  let(:payload) { { hello: 'world' } }
   let(:message) { payload.to_json }
 
   context 'given a correctly implemented worker' do
@@ -28,10 +23,6 @@ RSpec.describe Worker do
 
     it 'should expect a payload' do
       expect { subject.work message }.to change { subject.payload }.to OpenStruct.new payload
-    end
-
-    it 'should run #go' do
-      expect { subject.work message }.to change { subject.my_attr }.to my_attr
     end
   end
 
