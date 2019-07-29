@@ -11,5 +11,9 @@ module Helpers
     def errors
       @errors = body.errors
     end
+
+    def error_messages
+      @error_messages = errors.map(&:message)
+    end
   end
 end
