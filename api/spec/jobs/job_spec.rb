@@ -5,10 +5,10 @@ describe Job do
         expect(Rails.env).to receive(:test?) { false }
       end
 
-      it 'should enqueue' do
-        queue_name = 'test'
-        payload = { hello: 'world' }
+      let(:queue_name) { 'test.queue' }
+      let(:payload) { { hello: 'world' } }
 
+      it 'should enqueue' do
         connection = double 'connection'
         channel = double 'channel'
         queue = double 'queue'
@@ -27,6 +27,7 @@ describe Job do
     context 'when in test environment' do
       it 'should not enqueue' do
         expect(Bunny).not_to receive(:new)
+
         Job.enqueue
       end
     end
