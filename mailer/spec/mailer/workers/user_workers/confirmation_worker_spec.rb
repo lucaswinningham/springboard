@@ -10,7 +10,7 @@ RSpec.describe Workers::UserWorkers::ActivationWorker do
       expect(Mailer::Env).to receive(:production?) { true }
     end
 
-    it 'should send email' do
+    it 'should send mail' do
       mail = Mail.new
       expect(Mail).to receive(:new) { mail }
       expect(mail).to receive(:deliver)
@@ -29,7 +29,7 @@ RSpec.describe Workers::UserWorkers::ActivationWorker do
       expect(Mailer::Env).to receive(:production?) { false }
     end
 
-    it 'should not send email' do
+    it 'should not send mail' do
       expect(Mail).not_to receive(:new)
   
       subject.work message
