@@ -1,4 +1,7 @@
 RSpec.describe User, type: :model do
+  describe '#password=' do
+  end
+
   describe 'salt' do
     context 'on create' do
       it 'should populate salt' do

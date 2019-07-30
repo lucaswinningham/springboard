@@ -14,7 +14,23 @@ module Mutations
             expect { request }.to change { User.count }.by(1)
           end
 
-          it 'returns auth for the new user' do
+          it 'should #trigger_confirmation for user' do
+            user_instance = new_user
+            expect(User).to receive(:new) { user_instance }
+            expect(user_instance).to receive(:trigger_confirmation)
+
+            request
+          end
+
+          it 'should #refresh_auth for user' do
+            user_instance = new_user
+            expect(User).to receive(:new) { user_instance }
+            expect(user_instance).to receive(:refresh_auth)
+
+            request
+          end
+
+          it 'returns auth for user' do
             request
             auth = data.userSignup
             user = User.find_by_email new_user.email

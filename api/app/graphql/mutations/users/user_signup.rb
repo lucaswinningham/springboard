@@ -9,7 +9,7 @@ module Mutations
       def resolve(email: nil, name: nil)
         new_user = User.new name: name, email: email
         if new_user.save
-          new_user.tap(&:refresh_auth)
+          new_user.tap(&:trigger_confirmation).tap(&:refresh_auth)
         else
           validation_error new_user
         end
