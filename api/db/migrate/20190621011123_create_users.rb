@@ -3,9 +3,6 @@ class CreateUsers < ActiveRecord::Migration[5.1]
     create_table :users do |t|
       t.string :name
       t.string :email
-      t.boolean :active
-      t.datetime :activated_at
-      t.datetime :deactivated_at
 
       t.timestamps
     end
