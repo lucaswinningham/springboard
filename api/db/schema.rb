@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20190627005718) do
     t.datetime "activated_at"
     t.datetime "deactivated_at"
     t.string "confirmation_digest"
+    t.datetime "confirmed_at"
     t.string "nonce"
     t.string "civ"
     t.string "ckey"

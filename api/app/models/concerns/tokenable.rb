@@ -1,6 +1,5 @@
 module Tokenable
   extend ActiveSupport::Concern
-
   included do
     before_create :assign_token
   end

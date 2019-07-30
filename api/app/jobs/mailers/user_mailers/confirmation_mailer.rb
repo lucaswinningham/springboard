@@ -1,6 +1,6 @@
 module Mailers
   module UserMailers
-    class ActivationMailer
+    class ConfirmationMailer
       attr_reader :user
 
       def initialize(user)
@@ -14,15 +14,15 @@ module Mailers
       private
 
       def queue
-        'mailers.user.activation'
+        'mailers.user.confirmation'
       end
 
       def payload
-        { email: user.email, activation_link: activation_link }
+        { email: user.email, confirmation_link: confirmation_link }
       end
 
-      def activation_link
-        "#{ENV['CLIENT_URL']}/activate/#{user.name}/#{user.activation_token}"
+      def confirmation_link
+        "#{ENV['CLIENT_URL']}/activate/#{user.name}/#{user.confirmation_token}"
       end
     end
   end

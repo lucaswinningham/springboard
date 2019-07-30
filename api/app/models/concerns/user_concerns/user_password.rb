@@ -1,7 +1,6 @@
 module UserConcerns
   module UserPassword
     extend ActiveSupport::Concern
-
     included do
       before_create :assign_salt
       validate :validate_salt_not_changed

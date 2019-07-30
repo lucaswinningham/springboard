@@ -1,10 +1,9 @@
 module UserConcerns
   module UserIdentifiable
-    extend ActiveSupport::Concern
-
     VALID_NAME_REGEXP = /\A[A-Za-z0-9_\-]+\Z/.freeze
     VALID_EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP
 
+    extend ActiveSupport::Concern
     included do
       validates(
         :name,

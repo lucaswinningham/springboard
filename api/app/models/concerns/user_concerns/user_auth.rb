@@ -1,7 +1,5 @@
 module UserConcerns
   module UserAuth
-    extend ActiveSupport::Concern
-
     AUTH_EXPIRATION_DURATION = 5.minutes
 
     VALID_NONCE_REGEXP = Regexp.new(
@@ -10,6 +8,7 @@ module UserConcerns
     VALID_CKEY_REGEXP = AuthServices::CipherService::VALID_KEY_REGEXP
     VALID_CIV_REGEXP = AuthServices::CipherService::VALID_IV_REGEXP
 
+    extend ActiveSupport::Concern
     included do
       validates :nonce, format: { with: VALID_NONCE_REGEXP }
       validates :ckey, format: { with: VALID_CKEY_REGEXP }
@@ -20,7 +19,7 @@ module UserConcerns
       new_nonce = SecureRandom.base64
       new_ckey = AuthServices::CipherService.random_key
       new_civ = AuthServices::CipherService.random_iv
-      expiration = AUTH_EXPIRATION_DURATION.from_now
+      expiration = AUTH_EXPIRATION_DURATION.from_now.utc
 
       update nonce: new_nonce, ckey: new_ckey, civ: new_civ, auth_expires_at: expiration
     end
