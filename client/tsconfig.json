@@ -16,12 +16,16 @@
     ],
     "lib": [
       "es2018",
-      "dom"
+      "dom",
+      "esnext.asynciterable"
     ],
-
     "paths": {
-      "@env/*": [ "environments/*" ],
-      "@app/*": [ "app/*" ]
+      "@env/*": [
+        "environments/*"
+      ],
+      "@app/*": [
+        "app/*"
+      ]
     }
   }
 }
