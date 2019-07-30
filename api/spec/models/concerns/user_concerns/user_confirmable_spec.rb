@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
         expect { user.trigger_confirmation }.to change { user.confirmation_token }.to new_token
       end
 
-      it 'should populate confirmation_digest with bcrypt password of #confirmation_token' do
+      it 'should populate confirmation_digest with hash of #confirmation_token' do
         new_token = 'new_confirmation_token'
         new_digest = 'new_confirmation_digest'
 
