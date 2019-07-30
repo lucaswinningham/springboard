@@ -1,9 +1,9 @@
-require 'mailer/workers/user_workers/activation_worker'
+require 'mailer/workers/user_workers/confirmation_worker'
 
 RSpec.describe Workers::UserWorkers::ActivationWorker do
   let(:email) { 'user@example.com' }
-  let(:activation_link) { 'domain.com' }
-  let(:message) { { email: email, activation_link: activation_link }.to_json }
+  let(:confirmation_link) { 'domain.com' }
+  let(:message) { { email: email, confirmation_link: confirmation_link }.to_json }
 
   context 'when in production environment' do
     before do
@@ -19,8 +19,8 @@ RSpec.describe Workers::UserWorkers::ActivationWorker do
   
       expect(mail.to).to include email
       expect(mail.from).to include Mailer::Env.app_email
-      expect(mail.subject).to include 'activation'
-      expect(mail.html_part.body.raw_source).to include activation_link
+      expect(mail.subject).to include 'confirmation'
+      expect(mail.html_part.body.raw_source).to include confirmation_link
     end
   end
 
