@@ -5,13 +5,15 @@ import { ApolloQueryResult } from 'apollo-client';
 
 import { Observable } from 'rxjs';
 
+export type AppQuery = Observable<ApolloQueryResult<any>>;
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   constructor(private apollo: Apollo) { }
 
-  query(args: { document: string, variables?: any }): Observable<ApolloQueryResult<any>> {
+  query(args: { document: string, variables?: any }): AppQuery {
     const { document } = args;
     const variables = args.variables || {};
 

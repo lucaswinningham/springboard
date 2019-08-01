@@ -23,7 +23,7 @@ describe('ApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('+query', () => {
+  describe('query', () => {
     let document, dog, flushData;
 
     beforeEach(() => {
