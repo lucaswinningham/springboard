@@ -17,9 +17,9 @@ Mail.defaults do
   )
 end
 
-require 'mailer/workers/user_workers/activation_worker'
+require 'mailer/workers/user_workers/confirmation_worker'
 workers = [
-  Workers::UserWorkers::ActivationWorker
+  Workers::UserWorkers::ConfirmationWorker
 ]
 
 require 'sneakers/runner'

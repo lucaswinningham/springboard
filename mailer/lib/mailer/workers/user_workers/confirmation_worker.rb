@@ -3,7 +3,7 @@ require 'mail'
 
 module Workers
   module UserWorkers
-    class ActivationWorker
+    class ConfirmationWorker
       include Worker
       from_queue 'mailers.user.confirmation'
 
