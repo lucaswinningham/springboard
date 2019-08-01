@@ -11,6 +11,7 @@ describe('ApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [ ApolloTestingModule ] });
+
     controller = TestBed.get(ApolloTestingController);
     service = TestBed.get(ApiService);
   });
@@ -23,8 +24,10 @@ describe('ApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('query', () => {
+  describe('+query', () => {
     let document, dog, flushData;
+
+    // class Dog { }
 
     beforeEach(() => {
       document = `

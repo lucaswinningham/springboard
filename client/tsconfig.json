@@ -22,7 +22,8 @@
     "paths": {
       "@env/*": [ "environments/*" ],
       "@app/*": [ "app/*" ],
-      "@services/*": [ "app/services/*" ]
+      "@services/*": [ "app/services/*" ],
+      "@models/*": [ "app/models/*" ]
     }
   }
 }
