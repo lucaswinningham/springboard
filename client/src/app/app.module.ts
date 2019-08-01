@@ -11,6 +11,7 @@ import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { environment } from '@env/environment';
+import { PagesModule } from './pages/pages.module';
 const { apiUrl } = environment;
 
 @NgModule({
@@ -21,7 +22,8 @@ const { apiUrl } = environment;
     BrowserModule,
     AppRoutingModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    PagesModule
   ],
   providers: [{
     provide: APOLLO_OPTIONS,
