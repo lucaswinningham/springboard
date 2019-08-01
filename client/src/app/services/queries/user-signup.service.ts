@@ -6,7 +6,7 @@ import { ApiService } from '@services/utils/api.service';
 
 import { UserAuth } from '@app/models/user/user-auth.model';
 
-const document = `
+export const document = `
   mutation {
     userSignup(
       $name: String
@@ -36,7 +36,6 @@ export class UserSignupService {
   constructor(private api: ApiService) { }
 
   public signup(variables: { name: string, email: string }): Observable<UserAuth> {
-    console.log( { variables: variables } );
     return this.api.query({ document, variables }).pipe(
       map(queryResult => new UserAuth(queryResult))
     );
