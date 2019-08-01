@@ -6,9 +6,12 @@ import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
-import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
+import { environment } from '@env/environment';
+const { apiUrl } = environment;
 
 @NgModule({
   declarations: [
@@ -26,9 +29,9 @@ import { InMemoryCache } from "apollo-cache-inmemory";
       return {
         cache: new InMemoryCache(),
         link: httpLink.create({
-          uri: "https://o5x5jzoo7z.sse.codesandbox.io/graphql"
+          uri: apiUrl
         })
-      }
+      };
     },
     deps: [HttpLink]
   }],

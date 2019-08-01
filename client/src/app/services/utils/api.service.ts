@@ -4,9 +4,6 @@ import gql from 'graphql-tag';
 import { ApolloQueryResult } from 'apollo-client';
 
 import { Observable } from 'rxjs';
-// import { map, tap } from 'rxjs/operators';
-
-type AppQueryResult<T> = Observable<ApolloQueryResult<T>>;
 
 @Injectable({
   providedIn: 'root'
@@ -14,38 +11,11 @@ type AppQueryResult<T> = Observable<ApolloQueryResult<T>>;
 export class ApiService {
   constructor(private apollo: Apollo) { }
 
-  query<T>(parameters: { name: string, args: object, fields: string[] }): AppQueryResult<T> {
-    const { name, args, fields } = parameters;
+  query(args: { document: string, variables?: any }): Observable<ApolloQueryResult<any>> {
+    const { document } = args;
+    const variables = args.variables || {};
 
-    const argsStr = Object.entries(args).map(([key, value]) => `${key}: "${value}"`).join(' ');
-    const fieldsStr = fields.join(' ');
-
-    return this.apollo.watchQuery<T>({
-      query: gql`
-        {
-          ${name}(
-            ${argsStr}
-          ) {
-            ${fieldsStr}
-          }
-        }
-      `,
-    }).valueChanges;
-
-    // this.apollo.watchQuery({
-    //   query: gql`
-    //     {
-    //       rates(currency: "USD") {
-    //         currency
-    //         rate
-    //       }
-    //     }
-    //   `,
-    // })
-    // .valueChanges.subscribe(result => {
-    //   this.rates = result.data && result.data.rates;
-    //   this.loading = result.loading;
-    //   this.error = result.error;
-    // });
+    const query = gql`${document}`;
+    return this.apollo.watchQuery<any>({ query, variables }).valueChanges;
   }
 }
