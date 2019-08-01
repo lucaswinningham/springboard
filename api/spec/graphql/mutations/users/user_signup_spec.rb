@@ -58,14 +58,8 @@ module Mutations
       def query(name:, email:)
         <<~GQL
           mutation {
-            userSignup(
-              name: \"#{name}\"
-              email: \"#{email}\"
-            ) {
-              salt
-              nonce
-              ckey
-              civ
+            userSignup(name: \"#{name}\" email: \"#{email}\") {
+              salt nonce ckey civ
             }
           }
         GQL

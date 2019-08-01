@@ -10,7 +10,7 @@ describe('UserSignupService', () => {
   let api: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
-    const apiSpy = jasmine.createSpyObj('ApiService', ['query']);
+    const apiSpy = jasmine.createSpyObj('ApiService', ['mutate']);
     TestBed.configureTestingModule({ providers: [{ provide: ApiService, useValue: apiSpy }] });
 
     api = TestBed.get(ApiService);
@@ -33,13 +33,13 @@ describe('UserSignupService', () => {
       ckey = 'EFnAMTRPt1nHF1c5bxsR0Q==\n';
       civ = 'o3SHAgyHmRjwhSGm2MilqA==\n';
 
-      const data = { userAuth: { salt, nonce, ckey, civ } };
-      api.query.and.returnValue(of({ data }));
+      const data = { userSignup: { salt, nonce, ckey, civ } };
+      api.mutate.and.returnValue(of({ data }));
     });
 
-    it('should expect api to receive +query', () => {
+    it('should expect api to receive +mutate', () => {
       service.signup({ name, email }).subscribe();
-      expect(api.query).toHaveBeenCalledWith({ document, variables: { name, email } });
+      expect(api.mutate).toHaveBeenCalledWith({ document, variables: { name, email } });
     });
 
     it('should expect correct data in result', () => {
