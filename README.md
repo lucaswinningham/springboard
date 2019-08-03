@@ -43,3 +43,17 @@ $ createuser -d springboardapp
 $ rails db:create
 $ rails db:migrate
 ```
+
+install client dependencies
+
+```bash
+$ cd springboard/client
+$ npm i
+```
+
+install mailer dependencies
+
+```bash
+$ cd springboard/mailer
+$ bundle
+```
