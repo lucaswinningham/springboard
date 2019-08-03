@@ -1,6 +1,6 @@
 require 'mailer/workers/user_workers/confirmation_worker'
 
-RSpec.describe Workers::UserWorkers::ActivationWorker do
+RSpec.describe Workers::UserWorkers::ConfirmationWorker do
   let(:email) { 'user@example.com' }
   let(:confirmation_link) { 'domain.com' }
   let(:message) { { email: email, confirmation_link: confirmation_link }.to_json }
