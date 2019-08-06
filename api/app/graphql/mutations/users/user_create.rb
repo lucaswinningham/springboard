@@ -1,6 +1,6 @@
 module Mutations
   module Users
-    class UserSignup < BaseMutation
+    class UserCreate < BaseMutation
       argument :name, String, required: true
       argument :email, String, required: true
 

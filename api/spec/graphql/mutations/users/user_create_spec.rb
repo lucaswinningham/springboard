@@ -1,6 +1,6 @@
 module Mutations
   module Users
-    RSpec.describe UserSignup, type: :request do
+    RSpec.describe UserCreate, type: :request do
       describe '.resolve' do
         let(:request) do
           params = { query: query(name: new_user.name, email: new_user.email) }
@@ -32,7 +32,7 @@ module Mutations
 
           it 'returns auth for user' do
             request
-            auth = data.userSignup
+            auth = data.userCreate
             user = User.find_by_email new_user.email
 
             expect(auth.salt).to eq user.salt
@@ -58,7 +58,7 @@ module Mutations
       def query(name:, email:)
         <<~GQL
           mutation {
-            userSignup(name: \"#{name}\" email: \"#{email}\") {
+            userCreate(name: \"#{name}\" email: \"#{email}\") {
               salt nonce ckey civ
             }
           }
