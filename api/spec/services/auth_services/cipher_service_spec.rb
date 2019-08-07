@@ -3,8 +3,10 @@ describe AuthServices::CipherService do
     it 'should encrypt and encode a message' do
       key = "ZQ6UaBUEN8CePN4V0162fQ==\n"
       iv = "uu5Q2rZtbIwuAX+h4SYEXA==\n"
+      expected_encrypted = "f0MnHuT4Xc33drJ4alMVcg==\n"
+
       encrypted = AuthServices::CipherService.encrypt message: 'test message', key: key, iv: iv
-      expect(encrypted).to eq "f0MnHuT4Xc33drJ4alMVcg==\n"
+      expect(encrypted).to eq expected_encrypted
     end
   end
 
@@ -13,8 +15,10 @@ describe AuthServices::CipherService do
       key = "O3GhpukThHID3LlFv8Y3Cw==\n"
       iv = "/i0uDJ8Y2NFmCcDriCSwmA==\n"
       encrypted = "UArfsxdVvB+etXp/JrVSuw==\n"
+      expected_decrypted = 'test message'
+
       decrypted = AuthServices::CipherService.decrypt message: encrypted, key: key, iv: iv
-      expect(decrypted).to eq 'test message'
+      expect(decrypted).to eq expected_decrypted
     end
   end
 
@@ -38,7 +42,7 @@ describe AuthServices::CipherService do
     end
   end
 
-  describe '::random_key' do
+  describe '::random_iv' do
     it 'should give a random cipher iv' do
       regexp = AuthServices::CipherService::VALID_IV_REGEXP
       expect(AuthServices::CipherService.random_iv).to match regexp

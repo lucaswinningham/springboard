@@ -11,6 +11,6 @@ module Tokenable
   end
 
   def unique_token?
-    token && self.class.find_by_token(token).nil?
+    token && self.class.find_by(token: token).nil?
   end
 end

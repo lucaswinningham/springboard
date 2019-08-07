@@ -33,7 +33,7 @@ module UserConcerns
 
       errors.add :password_digest, 'Change of password_digest not allowed.'
     end
-  
+
     def validate_password
       return unless password
 

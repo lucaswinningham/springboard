@@ -4,5 +4,6 @@ class AddAuthToUsers < ActiveRecord::Migration[5.1]
     add_column :users, :civ, :string
     add_column :users, :ckey, :string
     add_column :users, :auth_expires_at, :datetime
+    add_column :users, :jwt_key, :string
   end
 end

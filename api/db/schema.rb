@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20190627005718) do
     t.string "civ"
     t.string "ckey"
     t.datetime "auth_expires_at"
+    t.string "jwt_key"
     t.string "password_digest"
     t.string "salt"
     t.index ["email"], name: "index_users_on_email", unique: true

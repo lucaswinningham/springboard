@@ -32,6 +32,29 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'jwt_key' do
+    let(:user) { create :user, jwt_key: nil }
+
+    context 'on create' do
+      it 'should populate jwt_key' do
+        valid_jwt_key = user.jwt_key =~ Regexp.new('\A(?:[a-z0-9+/]{2})*\z')
+        expect(valid_jwt_key).to be_truthy
+      end
+    end
+
+    context 'on save' do
+      it 'should not change jwt_key' do
+        expect { user.update jwt_key: 'bogus' }.to_not change { user.reload.jwt_key }.itself
+      end
+
+      it 'should add jwt_key error to user' do
+        user.update jwt_key: 'bogus'
+        jwt_key_error = user.errors.key? :jwt_key
+        expect(jwt_key_error).to be true
+      end
+    end
+  end
+
   describe '#refresh_auth' do
     let(:user) { create :user, nonce: nil, ckey: nil, civ: nil, auth_expires_at: nil }
 
@@ -62,6 +85,41 @@ RSpec.describe User, type: :model do
 
         expect { user.refresh_auth }.to change { user.auth_expires_at }.to auth_exipiration
       end
+    end
+  end
+
+  describe '#auth_expired?' do
+    let!(:user) { create(:user).tap(&:refresh_auth) }
+
+    context 'when auth is not expired' do
+      it 'should return false' do
+        Timecop.freeze do
+          expect(user.auth_expired?).to be false
+        end
+      end
+    end
+
+    context 'when auth is expired' do
+      it 'should return true' do
+        Timecop.travel User::AUTH_EXPIRATION_DURATION.from_now.utc do
+          expect(user.auth_expired?).to be true
+        end
+      end
+    end
+  end
+
+  describe '#refresh_token' do
+    let(:user) { create :user }
+
+    it 'should use service to issue new token' do
+      token = 'token'
+      expect(AuthServices::JwtService).to receive(:encode) { token }
+      expect(user.refresh_token).to be token
+    end
+
+    it 'should set #token to new token' do
+      token = user.refresh_token
+      expect(token).to eq user.token
     end
   end
 end

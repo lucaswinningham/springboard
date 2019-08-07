@@ -38,7 +38,8 @@ RSpec.describe User, type: :model do
 
   describe '#password' do # these pass password_digest validations and i don't think they should
     context 'with valid password argument' do
-      let(:hashed) { BCrypt::Engine.hash_secret 'plain_password', user.salt }
+      let(:password) { 'plain_password' }
+      let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
 
       it 'should populate password_digest' do
         hashed_hash = 'hashed_hash'
@@ -61,8 +62,8 @@ RSpec.describe User, type: :model do
   end
 
   describe '#password?' do
-    let(:plain_password) { 'plain_password' }
-    let(:hashed) { BCrypt::Engine.hash_secret plain_password, user.salt }
+    let(:password) { 'plain_password' }
+    let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
     before { user.update password: hashed }
 
     context 'with correct password' do
@@ -74,7 +75,7 @@ RSpec.describe User, type: :model do
 
     context 'with incorrect password' do
       it 'should return false' do
-        correct_password = user.password? plain_password
+        correct_password = user.password? password
         expect(correct_password).to be false
       end
     end

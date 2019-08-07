@@ -2,45 +2,94 @@ module Mutations
   module Users
     RSpec.describe UserPasswordChange, type: :request do
       describe '.resolve' do
+        let(:user) { create(:user).tap(&:refresh_auth) }
+
         let(:request) do
-          params = { query: query(name: new_user.name, email: new_user.email) }
+          params = {
+            query: query(
+              email: user.email,
+              old_password_message: old_password_message,
+              new_password_message: new_password_message
+            )
+          }
           post '/graphql', params: params
         end
 
-        # context 'with valid params' do
-        #   let(:new_user) { build :user }
+        context 'without previously set password (on user create)' do
+          context 'with valid params' do
+            let(:old_password_message) { nil }
+            let(:new_password_message) do
+              ClientMocks::UserPasswordMock.pack_password_message(
+                user: user, password: 'new_password'
+              )
+            end
 
-        #   it 'creates user' do
-        #     expect { request }.to change { User.count }.by(1)
-        #   end
+            it 'changes user password_digest' do
+              expect { request }.to change { user.reload.password_digest }.itself
+            end
 
-        #   it 'should #trigger_confirmation for user' do
-        #     user_instance = new_user
-        #     expect(User).to receive(:new) { user_instance }
-        #     expect(user_instance).to receive(:trigger_confirmation)
+            it 'should #refresh_token for user' do
+              user_instance = user
+              expect(User).to receive(:find_by) { user_instance }
+              expect(user_instance).to receive(:refresh_token)
 
-        #     request
-        #   end
+              request
+            end
 
-        #   it 'should #refresh_auth for user' do
-        #     user_instance = new_user
-        #     expect(User).to receive(:new) { user_instance }
-        #     expect(user_instance).to receive(:refresh_auth)
+            it 'returns token for user' do
+              Timecop.freeze do
+                request
+                expected_token = user.refresh_token
 
-        #     request
-        #   end
+                token = data.userPasswordChange.token
+                expect(token).to eq expected_token
+              end
+            end
+          end
+        end
 
-        #   it 'returns auth for user' do
-        #     request
-        #     auth = data.userPasswordChange
-        #     user = User.find_by_email new_user.email
+        context 'with previously set password' do
+          let(:password) { 'plain_password' }
+          let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
 
-        #     expect(auth.salt).to eq user.salt
-        #     expect(auth.nonce).to eq user.nonce
-        #     expect(auth.ckey).to eq user.ckey
-        #     expect(auth.civ).to eq user.civ
-        #   end
-        # end
+          before { user.update password: hashed }
+
+          context 'with valid params' do
+            let(:old_password_message) do
+              ClientMocks::UserPasswordMock.pack_password_message(
+                user: user, password: password
+              )
+            end
+
+            let(:new_password_message) do
+              ClientMocks::UserPasswordMock.pack_password_message(
+                user: user, password: 'new_password'
+              )
+            end
+
+            it 'changes user password_digest' do
+              expect { request }.to change { user.reload.password_digest }.itself
+            end
+
+            it 'should #refresh_token for user' do
+              user_instance = user
+              expect(User).to receive(:find_by) { user_instance }
+              expect(user_instance).to receive(:refresh_token)
+
+              request
+            end
+
+            it 'returns token for user' do
+              Timecop.freeze do
+                request
+                expected_token = user.refresh_token
+
+                token = data.userPasswordChange.token
+                expect(token).to eq expected_token
+              end
+            end
+          end
+        end
 
         # context 'with invalid params' do
         #   let(:new_user) { build :user, name: '', email: '' }
@@ -55,11 +104,15 @@ module Mutations
         # end
       end
 
-      def query(name:, email:)
+      def query(email:, old_password_message:, new_password_message:)
         <<~GQL
           mutation {
-            userPasswordChange(name: \"#{name}\" email: \"#{email}\") {
-              salt nonce ckey civ
+            userPasswordChange(
+              email: \"#{email}\"
+              oldPasswordMessage: \"#{old_password_message}\"
+              newPasswordMessage: \"#{new_password_message}\"
+            ) {
+              token
             }
           }
         GQL

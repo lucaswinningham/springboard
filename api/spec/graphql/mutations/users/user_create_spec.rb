@@ -33,7 +33,7 @@ module Mutations
           it 'returns auth for user' do
             request
             auth = data.userCreate
-            user = User.find_by_email new_user.email
+            user = User.find_by email: new_user.email
 
             expect(auth.salt).to eq user.salt
             expect(auth.nonce).to eq user.nonce
