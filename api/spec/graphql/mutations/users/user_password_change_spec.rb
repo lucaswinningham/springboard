@@ -50,7 +50,9 @@ module Mutations
 
         context 'with previously set password' do
           let(:password) { 'plain_password' }
-          let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
+          let(:hashed) do
+            ClientMocks::UserPasswordMock.hash_password user: user, password: password
+          end
 
           before { user.update password: hashed }
 

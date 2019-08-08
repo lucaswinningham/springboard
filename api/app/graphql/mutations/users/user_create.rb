@@ -6,12 +6,14 @@ module Mutations
 
       type Types::Auth::UserAuthType
 
-      def resolve(email: nil, name: nil)
+      attr_reader :email, :name
+
+      def mutate
         new_user = User.new name: name, email: email
         if new_user.save
           new_user.tap(&:trigger_confirmation).tap(&:refresh_auth)
         else
-          validation_error new_user
+          errors.add_record new_user
         end
       end
     end

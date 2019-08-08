@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - 'Guardfile'
     - 'bin/*'
+    - 'config/environments/*'
     - 'config/initializers/backtrace_silencers.rb'
     - 'db/schema.rb'
     - 'db/migrate/*'

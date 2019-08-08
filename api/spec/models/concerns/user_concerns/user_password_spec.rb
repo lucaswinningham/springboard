@@ -25,7 +25,9 @@ RSpec.describe User, type: :model do
   describe 'password_digest' do
     context 'on save' do
       it 'should not change password_digest' do
-        expect { user.update password_digest: 'bogus' }.to_not change { user.reload.password_digest }.itself
+        expect { user.update password_digest: 'bogus' }.to_not(
+          change { user.reload.password_digest }
+        )
       end
 
       it 'should add password_digest error to user' do
