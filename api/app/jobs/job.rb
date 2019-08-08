@@ -9,8 +9,8 @@ class Job
     channel = connection.create_channel
     queue = channel.queue queue_name, durable: true
 
-    puts " [APP_INFO] #{queue_name}:"
-    ap JSON.parse(payload)
+    Rails.logger.info " [BUNNY] #{queue_name}:"
+    Rails.logger.ap JSON.parse(payload), :info
 
     queue.publish payload
     connection.close
