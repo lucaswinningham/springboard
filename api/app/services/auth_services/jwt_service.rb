@@ -15,8 +15,8 @@ module AuthServices
       JWT.encode payload, secret
     end
 
-    def self.decode(token:, secret:)
-      JWT.decode(token, secret).first.symbolize_keys
+    def self.decode(token:, secret:, verify: true)
+      JWT.decode(token, secret, verify).first.symbolize_keys
     rescue JWT::DecodeError
       nil
     end

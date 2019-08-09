@@ -108,18 +108,18 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#refresh_token' do
+  describe '#refresh_jwt' do
     let(:user) { create :user }
 
-    it 'should use service to issue new token' do
-      token = 'token'
-      expect(AuthServices::JwtService).to receive(:encode) { token }
-      expect(user.refresh_token).to be token
+    it 'should use service to issue new jwt' do
+      jwt = 'jwt'
+      expect(AuthServices::JwtService).to receive(:encode) { jwt }
+      expect(user.refresh_jwt).to be jwt
     end
 
-    it 'should set #token to new token' do
-      token = user.refresh_token
-      expect(token).to eq user.token
+    it 'should set #jwt to new jwt' do
+      jwt = user.refresh_jwt
+      expect(jwt).to eq user.jwt
     end
   end
 end

@@ -36,7 +36,7 @@ describe AuthServices::JwtService do
         sub: 'user_name', iat: 1_565_133_028, nbf: 1_565_133_028, exp: 1_565_140_228
       }
 
-      payload = AuthServices::JwtService.decode token: token, secret: secret
+      payload = AuthServices::JwtService.decode token: token, secret: secret, verify: false
       expect(payload).to eq expected_payload
     end
 

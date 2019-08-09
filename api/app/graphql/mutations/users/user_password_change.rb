@@ -2,10 +2,10 @@ module Mutations
   module Users
     class UserPasswordChange < BaseMutation
       argument :email, String, required: true
-      argument :old_password_message, String, required: true
+      argument :old_password_message, String, required: false
       argument :new_password_message, String, required: true
 
-      type Types::Auth::UserTokenType
+      type Types::Auth::UserJwtType
 
       attr_reader :email, :old_password_message, :new_password_message
 
@@ -15,7 +15,7 @@ module Mutations
 
       def mutate
         if user.update password: new_password
-          user.tap(&:refresh_token)
+          user.tap(&:refresh_jwt)
         else
           errors.add_record user
         end

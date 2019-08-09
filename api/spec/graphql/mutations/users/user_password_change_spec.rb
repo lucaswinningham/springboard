@@ -28,21 +28,22 @@ module Mutations
               expect { request }.to change { user.reload.password_digest }.itself
             end
 
-            it 'should #refresh_token for user' do
+            it 'should #refresh_jwt for user' do
               user_instance = user
               expect(User).to receive(:find_by) { user_instance }
-              expect(user_instance).to receive(:refresh_token)
+              expect(user_instance).to receive(:refresh_jwt)
 
               request
             end
 
-            it 'returns token for user' do
+            it 'returns jwt for user' do
               Timecop.freeze do
                 request
-                expected_token = user.refresh_token
+                expected_jwt = user.refresh_jwt
 
-                token = data.userPasswordChange.token
-                expect(token).to eq expected_token
+                expect(data).to be_truthy
+                expect(data.userPasswordChange).to be_truthy
+                expect(data.userPasswordChange.jwt).to eq expected_jwt
               end
             end
           end
@@ -73,21 +74,22 @@ module Mutations
               expect { request }.to change { user.reload.password_digest }.itself
             end
 
-            it 'should #refresh_token for user' do
+            it 'should #refresh_jwt for user' do
               user_instance = user
               expect(User).to receive(:find_by) { user_instance }
-              expect(user_instance).to receive(:refresh_token)
+              expect(user_instance).to receive(:refresh_jwt)
 
               request
             end
 
-            it 'returns token for user' do
+            it 'returns jwt for user' do
               Timecop.freeze do
                 request
-                expected_token = user.refresh_token
+                expected_jwt = user.refresh_jwt
 
-                token = data.userPasswordChange.token
-                expect(token).to eq expected_token
+                expect(data).to be_truthy
+                expect(data.userPasswordChange).to be_truthy
+                expect(data.userPasswordChange.jwt).to eq expected_jwt
               end
             end
           end
@@ -114,7 +116,7 @@ module Mutations
               oldPasswordMessage: \"#{old_password_message}\"
               newPasswordMessage: \"#{new_password_message}\"
             ) {
-              token
+              jwt
             }
           }
         GQL

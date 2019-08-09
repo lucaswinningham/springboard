@@ -18,7 +18,7 @@ module UserConcerns
       validate :validate_jwt_key_not_changed
     end
 
-    attr_reader :token
+    attr_reader :jwt
 
     def refresh_auth
       new_nonce = SecureRandom.base64
@@ -33,9 +33,9 @@ module UserConcerns
       Time.now.utc > Time.at(auth_expires_at.to_i).utc
     end
 
-    def refresh_token
+    def refresh_jwt
       payload = AuthServices::JwtService.to_payload user: self
-      @token = AuthServices::JwtService.encode payload: payload, secret: jwt_key
+      @jwt = AuthServices::JwtService.encode payload: payload, secret: jwt_key
     end
 
     private
