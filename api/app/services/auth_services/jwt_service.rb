@@ -2,13 +2,9 @@ module AuthServices
   class JwtService
     def self.to_payload(user:)
       now = Time.now.utc.to_i
+      payload_timestamps = { iat: now, nbf: now, exp: (now + 2.hours).to_i }
 
-      {
-        sub: user.name,
-        iat: now,
-        nbf: now,
-        exp: (now + 2.hours).to_i
-      }
+      payload_timestamps.merge sub: user.name
     end
 
     def self.encode(payload:, secret:)

@@ -61,7 +61,6 @@ describe AuthServices::JwtService do
     it 'should decode a token into the original payload' do
       original_payload = { some: 'thing' }
       secret = AuthServices::JwtService.random_key
-
       token = AuthServices::JwtService.encode payload: original_payload, secret: secret
       payload = AuthServices::JwtService.decode token: token, secret: secret
 

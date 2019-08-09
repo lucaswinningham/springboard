@@ -20,7 +20,7 @@ module Mutations
     def resolve(**kwargs)
       transform_kwargs_into_instance_vars kwargs
 
-      run_before_callbacks if errors.none?
+      run_before_callbacks
       mutation = mutate if errors.none?
       run_after_callbacks if errors.none?
       return mutation if errors.none?

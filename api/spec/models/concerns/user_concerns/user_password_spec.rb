@@ -44,9 +44,15 @@ RSpec.describe User, type: :model do
       let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
 
       it 'should populate password_digest' do
-        hashed_hash = 'hashed_hash'
-        expect(BCrypt::Password).to receive(:create).with(hashed) { hashed_hash }
-        expect { user.update password: hashed }.to change { user.password_digest }.to hashed_hash
+        expect { user.update password: hashed }.to change { user.password_digest }.to be_truthy
+      end
+
+      it 'should populate password_digest with hash of password argument' do
+        user.update password: hashed
+
+        digest_password = BCrypt::Password.new(user.password_digest)
+        is_password = digest_password.is_password? hashed
+        expect(is_password).to be true
       end
     end
 
