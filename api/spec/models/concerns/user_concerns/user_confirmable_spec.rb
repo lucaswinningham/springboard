@@ -21,14 +21,13 @@ RSpec.describe User, type: :model do
         expect { user.trigger_confirmation }.to change { user.confirmation_digest }.to be_truthy
       end
 
-      # it 'should populate confirmation_digest with hash of #confirmation_token' do
-      #   user.trigger_confirmation
+      it 'should populate confirmation_digest with hash of #confirmation_token' do
+        user.trigger_confirmation
 
-      #   hashed_token = BCrypt::Password.create user.confirmation_token
-      #   is_password = BCrypt::Password.new(user.confirmation_digest).is_password? hashed_token
-
-      #   expect(is_password).to be true
-      # end
+        digest_password = BCrypt::Password.new(user.confirmation_digest)
+        is_password = digest_password.is_password? user.confirmation_token
+        expect(is_password).to be true
+      end
 
       it 'should send confirmation mail' do
         mailer = Mailers::UserMailers::ConfirmationMailer.new(user)
