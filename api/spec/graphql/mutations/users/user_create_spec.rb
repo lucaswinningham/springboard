@@ -49,6 +49,8 @@ module Mutations
           it 'returns informative errors' do
             request
 
+            byebug
+
             # expect(error_messages.count).to be > 1 # this test belongs on a base_mutation_spec
             expect(error_messages).to include match Regexp.new 'name', Regexp::IGNORECASE
             expect(error_messages).to include match Regexp.new 'email', Regexp::IGNORECASE

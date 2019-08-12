@@ -9,11 +9,11 @@ module Mutations
 
       attr_reader :email, :old_password_message, :new_password_message
 
-      before_mutation :validate_user!
-      before_mutation :validate_old_password_message!
-      before_mutation :validate_new_password_message!
+      before_execution :validate_user!
+      before_execution :validate_old_password_message!
+      before_execution :validate_new_password_message!
 
-      def mutate
+      def execute
         if user.update password: new_password
           user.tap(&:refresh_jwt)
         else
