@@ -1,3 +1,5 @@
+require 'support/client_mocks/user_password_mock'
+
 RSpec.describe User, type: :model do
   let(:user) { create :user, salt: nil, password_digest: nil, password: nil }
 
@@ -41,7 +43,9 @@ RSpec.describe User, type: :model do
   describe '#password' do # these pass password_digest validations and i don't think they should
     context 'with valid password argument' do
       let(:password) { 'plain_password' }
-      let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
+      let(:hashed) do
+        Support::ClientMocks::UserPasswordMock.hash_password user: user, password: password
+      end
 
       it 'should populate password_digest' do
         expect { user.update password: hashed }.to change { user.password_digest }.to be_truthy
@@ -71,7 +75,10 @@ RSpec.describe User, type: :model do
 
   describe '#password?' do
     let(:password) { 'plain_password' }
-    let(:hashed) { ClientMocks::UserPasswordMock.hash_password user: user, password: password }
+    let(:hashed) do
+      Support::ClientMocks::UserPasswordMock.hash_password user: user, password: password
+    end
+
     before { user.update password: hashed }
 
     context 'with correct password' do

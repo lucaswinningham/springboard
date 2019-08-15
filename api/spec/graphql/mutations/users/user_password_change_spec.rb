@@ -1,6 +1,11 @@
+require 'support/graphql/respondable'
+require 'support/client_mocks/user_password_mock'
+
 module Mutations
   module Users
     RSpec.describe UserPasswordChange, type: :request do
+      include Support::GraphQL::Respondable
+
       describe '.resolve' do
         let(:user) { create(:user).tap(&:refresh_auth) }
 
@@ -19,7 +24,7 @@ module Mutations
           context 'with valid params' do
             let(:old_password_message) { nil }
             let(:new_password_message) do
-              ClientMocks::UserPasswordMock.pack_password_message(
+              Support::ClientMocks::UserPasswordMock.pack_password_message(
                 user: user, password: 'new_password'
               )
             end
@@ -52,20 +57,20 @@ module Mutations
         context 'with previously set password' do
           let(:password) { 'plain_password' }
           let(:hashed) do
-            ClientMocks::UserPasswordMock.hash_password user: user, password: password
+            Support::ClientMocks::UserPasswordMock.hash_password user: user, password: password
           end
 
           before { user.update password: hashed }
 
           context 'with valid params' do
             let(:old_password_message) do
-              ClientMocks::UserPasswordMock.pack_password_message(
+              Support::ClientMocks::UserPasswordMock.pack_password_message(
                 user: user, password: password
               )
             end
 
             let(:new_password_message) do
-              ClientMocks::UserPasswordMock.pack_password_message(
+              Support::ClientMocks::UserPasswordMock.pack_password_message(
                 user: user, password: 'new_password'
               )
             end

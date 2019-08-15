@@ -7,10 +7,7 @@ module UserConcerns
     end
 
     def trigger_confirmation
-      return if confirmed_at
-
-      refresh_confirmation
-      send_confirmation_email
+      refresh_confirmation && send_confirmation_email unless confirmed_at
     end
 
     private
