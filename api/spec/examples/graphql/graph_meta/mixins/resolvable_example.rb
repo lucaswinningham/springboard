@@ -1,5 +1,7 @@
+# should this be an example though? it doesnt work with other classes
 shared_examples 'resolvable' do
   let(:klass) do
+    byebug
     next described_class unless described_class == GraphMeta::Mixins::Execution::Resolvable
 
     Class.new do
@@ -103,9 +105,11 @@ shared_examples 'resolvable' do
           expect(subject.foo).to be_nil
         end
 
-        it 'should resolve to errors' do
-          expect(subject.errors).to receive(:resolve)
-          subject.resolve
+        it 'should resolve from errors' do
+          errors = GraphMeta::Objects::Execution::Errors.new context: klass.new.context
+          errors.add 'bar'
+          expected_resolution = errors.resolve
+          expect(subject.resolve).to eq expected_resolution
         end
 
         it 'should not run remaining callbacks' do
