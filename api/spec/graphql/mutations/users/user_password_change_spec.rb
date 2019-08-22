@@ -15,15 +15,30 @@ module Mutations
       let(:request) do
         params = {
           query: query(
-            email: user.email,
-            old_password_message: old_password_message,
-            new_password_message: new_password_message
+            email: email,
+            prev_password: prev_password,
+            next_password: next_password
           )
         }
         post '/graphql', params: params
       end
 
+      def update_user_password(password)
+        user.update password: Support::ClientMocks::UserPasswordMock.hash_password(
+          user: user, password: password
+        )
+      end
+
+      def pack_password(password)
+        Support::ClientMocks::UserPasswordMock.pack_password_message(
+          user: user, password: password
+        )
+      end
+
       context 'with valid params' do
+        let(:email) { user.email }
+        let(:next_password) { pack_password 'next_password' }
+
         shared_examples 'password change' do
           it 'changes user password_digest' do
             expect { request }.to change { user.reload.password_digest }.itself
@@ -49,50 +64,86 @@ module Mutations
         end
 
         context 'without previously set password (on user create)' do
-          let(:old_password_message) { nil }
-          let(:new_password_message) do
-            Support::ClientMocks::UserPasswordMock.pack_password_message(
-              user: user, password: 'new_password'
-            )
-          end
+          let(:prev_password) { nil }
 
           include_examples 'password change'
           include_examples 'response data'
         end
 
         context 'with previously set password (user initiated password change)' do
-          let(:password) { 'plain_password' }
+          let(:password) { 'prev_password' }
+          let(:prev_password) { pack_password password }
 
-          before do
-            user.update password: Support::ClientMocks::UserPasswordMock.hash_password(
-              user: user, password: password
-            )
-          end
-
-          let(:old_password_message) do
-            Support::ClientMocks::UserPasswordMock.pack_password_message(
-              user: user, password: password
-            )
-          end
-
-          let(:new_password_message) do
-            Support::ClientMocks::UserPasswordMock.pack_password_message(
-              user: user, password: 'new_password'
-            )
-          end
+          before { update_user_password password }
 
           include_examples 'password change'
           include_examples 'response data'
         end
       end
 
-      def query(email:, old_password_message:, new_password_message:)
+      context 'with unknown user' do
+        let(:email) { build(:user).email }
+        let(:prev_password) { pack_password 'prev_password' }
+        let(:next_password) { pack_password 'next_password' }
+
+        it 'should return error' do
+          request
+          expect(error_messages).to include "User email #{email} not found."
+        end
+      end
+
+      context 'with invalid nonce' do
+        let(:email) { user.email }
+        let(:next_password) { pack_password 'next_password' }
+
+        let(:invalid_nonce) { 'bogus' }
+
+        context 'for prev_password' do
+          let(:password) { 'prev_password' }
+          let(:prev_password) { pack_password password }
+
+          before { update_user_password password }
+          before { user.update nonce: invalid_nonce }
+
+          it 'should return error' do
+            request
+            expect(error_messages).to include "Invalid prev_password nonce: '#{invalid_nonce}'"
+          end
+        end
+
+        context 'for next_password' do
+          let(:prev_password) { nil }
+
+          before { user.update nonce: invalid_nonce }
+
+          it 'should return error' do
+            request
+            expect(error_messages).to include "Invalid next_password nonce: '#{invalid_nonce}'"
+          end
+        end
+      end
+
+      context 'with incorrect prev_password' do
+        let(:password) { 'prev_password' }
+        let(:email) { user.email }
+        let(:prev_password) { pack_password 'bogus' }
+        let(:next_password) { pack_password 'next_password' }
+
+        before { update_user_password password }
+
+        it 'should return error' do
+          request
+          expect(error_messages).to include 'Incorrect prev_password.'
+        end
+      end
+
+      def query(email:, prev_password:, next_password:)
         <<~GQL
           mutation {
             userPasswordChange(
               email: \"#{email}\"
-              oldPasswordMessage: \"#{old_password_message}\"
-              newPasswordMessage: \"#{new_password_message}\"
+              prevPassword: \"#{prev_password}\"
+              nextPassword: \"#{next_password}\"
             ) {
               jwt
             }

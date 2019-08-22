@@ -2,16 +2,16 @@ module Mutations
   module Users
     class UserPasswordChange < BaseMutation
       argument :email, String, required: true
-      argument :old_password_message, String, required: false
-      argument :new_password_message, String, required: true
+      argument :prev_password, String, required: false
+      argument :next_password, String, required: true
 
       type Types::Auth::UserJwtType
 
-      attr_reader :email, :old_password_message, :new_password_message
+      attr_reader :email, :prev_password, :next_password
 
       before_execute :validate_user!
-      before_execute :validate_old_password_message!
-      before_execute :validate_new_password_message!
+      before_execute :validate_prev_password!
+      before_execute :validate_next_password!
 
       def execute
         if user.update password: new_password
@@ -28,22 +28,22 @@ module Mutations
       end
 
       def validate_user!
-        add_error_message "User email #{email} not found." unless user
+        errors.add "User email #{email} not found." unless user
       end
 
-      def validate_old_password_message!
+      def validate_prev_password!
         return if user.password_digest.blank?
 
-        nonce, old_password = unpack_password_message old_password_message
+        nonce, old_password = unpack_password_message prev_password
 
-        add_error_message "Invalid nonce: #{nonce}" unless valid_nonce? nonce
-        add_error_message 'Wrong password.' unless user.password? old_password
+        errors.add "Invalid prev_password nonce: '#{nonce}'" unless valid_nonce? nonce
+        errors.add 'Incorrect prev_password.' unless user.password? old_password
       end
 
-      def validate_new_password_message!
-        nonce, _new_password = unpack_password_message new_password_message
+      def validate_next_password!
+        nonce, _new_password = unpack_password_message next_password
 
-        add_error_message "Invalid nonce: #{nonce}" unless valid_nonce? nonce
+        errors.add "Invalid next_password nonce: '#{nonce}'" unless valid_nonce? nonce
       end
 
       def valid_nonce?(nonce)
@@ -51,7 +51,7 @@ module Mutations
       end
 
       def new_password
-        _nonce, password = unpack_password_message new_password_message
+        _nonce, password = unpack_password_message next_password
         password
       end
 
