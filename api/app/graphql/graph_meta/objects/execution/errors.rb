@@ -3,6 +3,7 @@ module GraphMeta
     module Execution
       class Errors
         attr_reader :context
+
         def initialize(context:)
           @context = context
         end

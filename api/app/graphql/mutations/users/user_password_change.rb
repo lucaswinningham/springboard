@@ -2,19 +2,19 @@ module Mutations
   module Users
     class UserPasswordChange < BaseMutation
       argument :email, String, required: true
-      argument :prev_password, String, required: false
-      argument :next_password, String, required: true
+      argument :old_password, String, required: false
+      argument :new_password, String, required: true
 
       type Types::Auth::UserJwtType
 
-      attr_reader :email, :prev_password, :next_password
+      attr_reader :email, :old_password, :new_password
 
       before_execute :validate_user!
-      before_execute :validate_prev_password!
-      before_execute :validate_next_password!
+      before_execute :validate_old_password!
+      before_execute :validate_new_password!
 
       def execute
-        if user.update password: new_password
+        if user.update password: new_password_validator.password
           user.tap(&:refresh_jwt)
         else
           errors.add_record user
@@ -28,39 +28,30 @@ module Mutations
       end
 
       def validate_user!
-        errors.add "User email #{email} not found." unless user
+        errors.add 'User email not found.' unless user
       end
 
-      def validate_prev_password!
+      def validate_old_password!
         return if user.password_digest.blank?
 
-        nonce, old_password = unpack_password_message prev_password
-
-        errors.add "Invalid prev_password nonce: '#{nonce}'" unless valid_nonce? nonce
-        errors.add 'Incorrect prev_password.' unless user.password? old_password
+        errors.add 'Incorrect old_password.' unless old_password_validator.correct_password?
+        errors.add 'Invalid old_password nonce.' unless old_password_validator.valid_nonce?
       end
 
-      def validate_next_password!
-        nonce, _new_password = unpack_password_message next_password
-
-        errors.add "Invalid next_password nonce: '#{nonce}'" unless valid_nonce? nonce
+      def validate_new_password!
+        errors.add 'Invalid new_password nonce.' unless new_password_validator.valid_nonce?
       end
 
-      def valid_nonce?(nonce)
-        !user.auth_expired? && user.nonce.present? && user.nonce == nonce
-      end
-
-      def new_password
-        _nonce, password = unpack_password_message next_password
-        password
-      end
-
-      def unpack_password_message(password_message)
-        decrypted_message = AuthServices::CipherService.decrypt(
-          message: password_message, key: user.ckey, iv: user.civ
+      def old_password_validator
+        @old_password_validator ||= GraphMeta::Objects::Password::Validator.new(
+          user: user, message: old_password
         )
-        nonce, password, _cnonce = decrypted_message.split('||')
-        [nonce, password]
+      end
+
+      def new_password_validator
+        @new_password_validator ||= GraphMeta::Objects::Password::Validator.new(
+          user: user, message: new_password
+        )
       end
     end
   end

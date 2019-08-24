@@ -16,8 +16,8 @@ module Mutations
         params = {
           query: query(
             email: email,
-            prev_password: prev_password,
-            next_password: next_password
+            old_password: old_password,
+            new_password: new_password
           )
         }
         post '/graphql', params: params
@@ -37,7 +37,7 @@ module Mutations
 
       context 'with valid params' do
         let(:email) { user.email }
-        let(:next_password) { pack_password 'next_password' }
+        let(:new_password) { pack_password 'new_password' }
 
         shared_examples 'password change' do
           it 'changes user password_digest' do
@@ -64,15 +64,15 @@ module Mutations
         end
 
         context 'without previously set password (on user create)' do
-          let(:prev_password) { nil }
+          let(:old_password) { nil }
 
           include_examples 'password change'
           include_examples 'response data'
         end
 
         context 'with previously set password (user initiated password change)' do
-          let(:password) { 'prev_password' }
-          let(:prev_password) { pack_password password }
+          let(:password) { 'old_password' }
+          let(:old_password) { pack_password password }
 
           before { update_user_password password }
 
@@ -83,67 +83,67 @@ module Mutations
 
       context 'with unknown user' do
         let(:email) { build(:user).email }
-        let(:prev_password) { pack_password 'prev_password' }
-        let(:next_password) { pack_password 'next_password' }
+        let(:old_password) { pack_password 'old_password' }
+        let(:new_password) { pack_password 'new_password' }
 
         it 'should return error' do
           request
-          expect(error_messages).to include "User email #{email} not found."
+          expect(error_messages).to include 'User email not found.'
         end
       end
 
       context 'with invalid nonce' do
         let(:email) { user.email }
-        let(:next_password) { pack_password 'next_password' }
+        let(:new_password) { pack_password 'new_password' }
 
         let(:invalid_nonce) { 'bogus' }
 
-        context 'for prev_password' do
-          let(:password) { 'prev_password' }
-          let(:prev_password) { pack_password password }
+        context 'for old_password' do
+          let(:password) { 'old_password' }
+          let(:old_password) { pack_password password }
 
           before { update_user_password password }
           before { user.update nonce: invalid_nonce }
 
           it 'should return error' do
             request
-            expect(error_messages).to include "Invalid prev_password nonce: '#{invalid_nonce}'"
+            expect(error_messages).to include 'Invalid old_password nonce.'
           end
         end
 
-        context 'for next_password' do
-          let(:prev_password) { nil }
+        context 'for new_password' do
+          let(:old_password) { nil }
 
           before { user.update nonce: invalid_nonce }
 
           it 'should return error' do
             request
-            expect(error_messages).to include "Invalid next_password nonce: '#{invalid_nonce}'"
+            expect(error_messages).to include 'Invalid new_password nonce.'
           end
         end
       end
 
-      context 'with incorrect prev_password' do
-        let(:password) { 'prev_password' }
+      context 'with incorrect old_password' do
+        let(:password) { 'old_password' }
         let(:email) { user.email }
-        let(:prev_password) { pack_password 'bogus' }
-        let(:next_password) { pack_password 'next_password' }
+        let(:old_password) { pack_password 'bogus' }
+        let(:new_password) { pack_password 'new_password' }
 
         before { update_user_password password }
 
         it 'should return error' do
           request
-          expect(error_messages).to include 'Incorrect prev_password.'
+          expect(error_messages).to include 'Incorrect old_password.'
         end
       end
 
-      def query(email:, prev_password:, next_password:)
+      def query(email:, old_password:, new_password:)
         <<~GQL
           mutation {
             userPasswordChange(
               email: \"#{email}\"
-              prevPassword: \"#{prev_password}\"
-              nextPassword: \"#{next_password}\"
+              oldPassword: \"#{old_password}\"
+              newPassword: \"#{new_password}\"
             ) {
               jwt
             }
