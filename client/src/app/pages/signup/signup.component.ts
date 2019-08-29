@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserSignupService } from '@app/services/queries/user-signup.service';
+import { UserSignupService } from '@app/services/queries/users/user-signup.service';
 import { tap } from 'rxjs/operators';
 
 import { UserSignup } from '@app/models/user/user-signup.model';

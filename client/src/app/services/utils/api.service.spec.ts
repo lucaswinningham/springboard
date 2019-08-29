@@ -27,8 +27,6 @@ describe('ApiService', () => {
   describe('public interface', () => {
     let document, dog, flushData;
 
-    // class Dog { }
-
     beforeEach(() => {
       dog = { id: 0, name: 'Mr Apollo', breedType: 'Hound' };
       flushData = { data : { dog } };
