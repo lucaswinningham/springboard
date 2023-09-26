@@ -1,7 +1,15 @@
 export class ApiErrors {
   readonly messages: string[];
+  readonly networkError: any;
+  readonly extraInfo: any;
 
-  constructor(args: { messages: string[] }) {
-    Object.assign(this, args);
+  constructor(errors) {
+    this.messages = [errors.message];
+    if (errors.graphQLErrors) {
+      this.messages.concat(errors.graphQLErrors.map(error => error.message));
+    }
+
+    const { networkError, extraInfo } = errors;
+    Object.assign(this, { networkError, extraInfo });
   }
 }

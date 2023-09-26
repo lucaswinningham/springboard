@@ -24,7 +24,8 @@
       "@app/*": [ "app/*" ],
       "@services/*": [ "app/services/*" ],
       "@models/*": [ "app/models/*" ],
-      "@pages/*": [ "app/pages/*" ]
+      "@pages/*": [ "app/pages/*" ],
+      "@spec/*": [ "app/spec/*" ]
     }
   }
 }

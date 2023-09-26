@@ -5,39 +5,15 @@ import { UserCreateService } from './user-create.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { GraphQLModule } from '@app/graphql.module';
-
-import { ApiService } from '@services/utils/api.service';
-import { Apollo } from 'apollo-angular';
-
-function randomToken(length = 16): string {
-  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  var result = '';
-  for (var i = length; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
-}
-
-function randomName(): string {
-  return randomToken(20);
-}
-
-function randomEmail(): string {
-  return `${randomToken()}@${randomToken()}.com`
-}
+import { SpecApiModule } from '@spec/spec-api.module';
+import { UserTraitGenerator } from '@spec/users/user-trait-generator';
 
 describe('UserCreateService', () => {
   let service: UserCreateService;
   let name, email;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ GraphQLModule ],
-      providers: [ ApiService, Apollo ]
-    });
-
+    TestBed.configureTestingModule({ imports: [ SpecApiModule ] });
     service = TestBed.get(UserCreateService);
   });
 
@@ -45,21 +21,21 @@ describe('UserCreateService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('+signup', () => {
+  describe('+create', () => {
     beforeEach(() => {
-      name = randomName();
-      email = randomEmail();
+      name = UserTraitGenerator.randomName();
+      email = UserTraitGenerator.randomEmail();
     });
 
     describe('with valid params', () => {
       describe('response data', () => {
-        it('should return userAuth', (done) => {
-          service.create({ name, email }).subscribe(userAuth => {
-            expect(userAuth).toBeTruthy();
-            expect(userAuth.salt).toBeTruthy();
-            expect(userAuth.nonce).toBeTruthy();
-            expect(userAuth.ckey).toBeTruthy();
-            expect(userAuth.civ).toBeTruthy();
+        it('should return user with auth attributes', (done) => {
+          service.create({ name, email }).subscribe(user => {
+            expect(user).toBeTruthy();
+            expect(user.salt).toBeTruthy();
+            expect(user.nonce).toBeTruthy();
+            expect(user.ckey).toBeTruthy();
+            expect(user.civ).toBeTruthy();
             done();
           });
         });
@@ -67,15 +43,15 @@ describe('UserCreateService', () => {
     });
 
     describe('with taken user name', () => {
-      let takenNameUserCreate$;
+      let takenUserCreate$;
 
       beforeEach(() => {
-        takenNameUserCreate$ = service.create({ name, email });
+        takenUserCreate$ = service.create({ name, email });
       });
 
       it('should return error', (done) => {
-        takenNameUserCreate$.subscribe(() => {
-          email = randomEmail();
+        takenUserCreate$.subscribe(() => {
+          email = UserTraitGenerator.randomEmail();
           service.create({ name, email }).pipe(
             catchError(apiErrors => {
               expect(apiErrors.messages).toContain('Name has already been taken')
@@ -88,8 +64,6 @@ describe('UserCreateService', () => {
     });
 
     describe('with invalid user name', () => {
-      let takenNameUserCreate$;
-
       beforeEach(() => {
         name = 'user name';
       });
@@ -106,15 +80,15 @@ describe('UserCreateService', () => {
     });
 
     describe('with taken user email', () => {
-      let takenNameUserCreate$;
+      let takenUserCreate$;
 
       beforeEach(() => {
-        takenNameUserCreate$ = service.create({ name, email });
+        takenUserCreate$ = service.create({ name, email });
       });
 
       it('should return error', (done) => {
-        takenNameUserCreate$.subscribe(() => {
-          name = randomName();
+        takenUserCreate$.subscribe(() => {
+          name = UserTraitGenerator.randomName();
           service.create({ name, email }).pipe(
             catchError(apiErrors => {
               expect(apiErrors.messages).toContain('Email has already been taken')
@@ -127,8 +101,6 @@ describe('UserCreateService', () => {
     });
 
     describe('with invalid user email', () => {
-      let takenNameUserCreate$;
-
       beforeEach(() => {
         email = 'email@domain@domain.com';
       });

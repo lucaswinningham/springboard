@@ -34,11 +34,15 @@ module Mutations
       def validate_old_password!
         return if user.password_digest.blank?
 
+        return errors.add 'Malformed message.' if old_password_validator.error?
+
         errors.add 'Incorrect old_password.' unless old_password_validator.correct_password?
         errors.add 'Invalid old_password nonce.' unless old_password_validator.valid_nonce?
       end
 
       def validate_new_password!
+        return errors.add 'Malformed message.' if new_password_validator.error?
+
         errors.add 'Invalid new_password nonce.' unless new_password_validator.valid_nonce?
       end
 

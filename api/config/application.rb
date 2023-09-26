@@ -32,6 +32,9 @@ module Api
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    require 'logging/logger'
+    config.logger = ActiveSupport::TaggedLogging.new Logging::Logger.new(STDOUT)
+
     config.generators do |g|
       g.test_framework :rspec, request_specs: false
     end

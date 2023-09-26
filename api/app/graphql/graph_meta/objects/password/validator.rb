@@ -11,6 +11,10 @@ module GraphMeta
           unpack_message
         end
 
+        def error?
+          @decryption_error
+        end
+
         def valid_nonce?
           @valid_nonce ||= !user.auth_expired? && user.nonce.present? && user.nonce == nonce
         end
@@ -22,11 +26,15 @@ module GraphMeta
         private
 
         def unpack_message
-          decrypted_message = AuthServices::CipherService.decrypt(
-            message: message, key: user.ckey, iv: user.civ
-          )
-
-          @nonce, @password, @cnonce = decrypted_message.split('||')
+          begin
+            decrypted_message = AuthServices::CipherService.decrypt(
+              message: message, key: user.ckey, iv: user.civ
+            )
+          rescue StandardError
+            @decryption_error = true
+          ensure
+            @nonce, @password, @cnonce = decrypted_message.to_s.split('||')
+          end
         end
       end
     end

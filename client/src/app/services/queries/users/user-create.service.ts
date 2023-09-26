@@ -5,9 +5,9 @@ import { map } from 'rxjs/operators';
 
 import { ApiService } from '@services/utils/api.service';
 
-import { UserAuth } from '@models/user/user-auth.model';
+import { User } from '@models/user.model';
 
-export const document = `
+const document = `
   mutation userCreate($name: String! $email: String!) {
     userCreate(name: $name email: $email) {
       salt nonce ckey civ
@@ -21,9 +21,9 @@ export const document = `
 export class UserCreateService {
   constructor(private api: ApiService) { }
 
-  public create(variables: { name: string, email: string }): Observable<UserAuth> {
+  create(variables: { name: string, email: string }): Observable<User> {
     return this.api.mutate({ document, variables }).pipe(
-      map(response => new UserAuth(response.data.userCreate))
+      map(response => new User(response.data.userCreate))
     );
   }
 }

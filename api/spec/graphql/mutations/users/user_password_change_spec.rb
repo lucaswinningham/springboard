@@ -3,6 +3,8 @@ require 'support/client_mocks/user_password_mock'
 
 require 'examples/graphql/graph_meta/mixins/resolvable_example'
 
+# add test about malformed message
+
 module Mutations
   module Users
     RSpec.describe UserPasswordChange, type: :request do

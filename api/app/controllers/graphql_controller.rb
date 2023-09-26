@@ -52,12 +52,14 @@ class GraphqlController < ApplicationController
   end
 
   def internal_server_error(error)
-    raise e unless Rails.env.development?
+    raise error unless Rails.env.development?
 
-    logger.error error.message
-    logger.error error.backtrace.join "\n"
+    logger.error error, tags: ['APP', 'GraphQl']
 
-    error_json = { error: { message: error.message, backtrace: error.backtrace }, data: nil }
-    render json: error_json, status: :internal_server_error
+    error_json = {
+      data: { operation_name.to_s => {} },
+      apierrors: { message: error.message, backtrace: error.backtrace }
+    }
+    render json: error_json, status: :ok
   end
 end

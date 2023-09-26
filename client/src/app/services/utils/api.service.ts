@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -29,12 +29,15 @@ export class ApiService {
 
     const mutation = gql`${document}`;
     return this.apollo.mutate({ mutation, variables }).pipe(
-      catchError((errors: any): Observable<any> => {
-        if (errors.graphQLErrors) {
-          const messages = errors.graphQLErrors.map(error => error.message);
-          return throwError(new ApiErrors({ messages }));
+      map(response => {
+        if (response.apierrors) {
+          throw new ApiErrors(response.apierrors);
+        } else {
+          return response;
         }
-        return throwError(errors);
+      }),
+      catchError((errors: any): Observable<ApiErrors> => {
+        return throwError(new ApiErrors(errors));
       })
     );
   }

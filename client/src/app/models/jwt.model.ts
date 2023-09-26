@@ -1,7 +1,7 @@
 export class Jwt {
-  readonly jwt: string;
+  readonly token: string;
 
-  constructor(args: { jwt: string }) {
+  constructor(args: { token: string }) {
     Object.assign(this, args);
   }
 }

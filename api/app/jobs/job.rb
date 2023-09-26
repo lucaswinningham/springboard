@@ -19,8 +19,7 @@ class Job
     private
 
     def log(queue:, payload:)
-      Rails.logger.info " [BUNNY] #{queue}:"
-      Rails.logger.ap JSON.parse(payload), :info
+      Rails.logger.ap JSON.parse(payload), level: :info, tags: ['APP', 'Bunny']
     end
   end
 end
